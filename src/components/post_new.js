@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import {Field,reduxForm} from 'redux-form';
-
+import {Link} from 'react-router-dom';
+import {createPost} from '../actions/index';
+import {connect} from'react-redux';
 class PostNew extends Component{
     renderField(field){
         const {meta:{touched,error}} = field;
@@ -21,7 +23,9 @@ class PostNew extends Component{
     }
 
     onSubmit(values){
-        console.log(values);
+        this.props.createPost(values,()=>{
+            this.props.history.push("/");
+        });
     }
     //three states of form pristine touched and invaid
     render(){
@@ -47,6 +51,9 @@ class PostNew extends Component{
                 <button type="submit" className="btn btn-primary">
                 Submit
                 </button>
+                <Link to = "/" className="btn btn-danger ml-2">
+                Cancel
+                </Link>
             </form>);
     }
 }
@@ -72,4 +79,6 @@ function validate(values){
 export default reduxForm({
     validate,
     form:'PostNewForm'
-})(PostNew);
+})(
+    connect(null,{createPost:createPost})(PostNew)
+);
